@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavigationControllerDelegate {
+class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavigationControllerDelegate {
 
 
     @IBOutlet weak var imageView: UIImageView!
@@ -48,7 +48,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.setToolbarHidden(true, animated: true)
         shareButton.enabled = (imageView.image != nil)
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         subscribeToKeyBoardNotifications()
@@ -61,7 +60,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
     @IBAction func pickAnImage(sender: AnyObject) {
         let controller = UIImagePickerController()
         controller.delegate = self
-        self.presentViewController(controller,animated: true,completion: nil)
+        presentViewController(controller,animated: true,completion: nil)
     }
     
     @IBAction func shareMeme(sender: AnyObject) {
@@ -69,10 +68,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
         let controller = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
         controller.completionWithItemsHandler = {
             (s: String?, ok: Bool, items: [AnyObject]?, err:NSError?) -> Void in
-            self.save()
+            if ok {
+                self.save()
+            }
             controller.dismissViewControllerAnimated(true, completion: nil)
         }
-        self.presentViewController(controller, animated: true, completion: nil)
+        presentViewController(controller, animated: true, completion: nil)
     }
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     
@@ -89,12 +90,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
     
     func keyBoardWillShow(notification:NSNotification) {
         if(bottomTextField.isFirstResponder()) {
-            self.view.frame.origin.y -= getKeyboardHeight(notification)
+            view.frame.origin.y -= getKeyboardHeight(notification)
         }
     }
     func keyBoardWillHide(notification:NSNotification) {
         if(bottomTextField.isFirstResponder()) {
-            self.view.frame.origin.y = 0;
+            view.frame.origin.y = 0;
         }
     }
     func subscribeToKeyBoardNotifications() {
@@ -115,7 +116,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
         let controller = UIImagePickerController()
         controller.delegate = self
         controller.sourceType = UIImagePickerControllerSourceType.Camera
-        self.presentViewController(controller,animated: true,completion: nil)
+        presentViewController(controller,animated: true,completion: nil)
     }
     
     func save(){
@@ -129,7 +130,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate , UINavi
 
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
-        self.view.drawViewHierarchyInRect(self.view.frame,
+        view.drawViewHierarchyInRect(self.view.frame,
             afterScreenUpdates: true)
         let memedImage : UIImage =
         UIGraphicsGetImageFromCurrentImageContext()
