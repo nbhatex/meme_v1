@@ -94,9 +94,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
         }
     }
     func keyBoardWillHide(notification:NSNotification) {
-        if(bottomTextField.isFirstResponder()) {
-            view.frame.origin.y = 0;
-        }
+        view.frame.origin.y = 0;
     }
     func subscribeToKeyBoardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyBoardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
