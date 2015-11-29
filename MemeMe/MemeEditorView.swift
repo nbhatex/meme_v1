@@ -34,6 +34,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
         // Do any additional setup after loading the view, typically from a nib.
         
         prepareTextFields(topTextField, bottomTextField)
+        navigationController?.setToolbarHidden(false, animated: false)
 
     }
     
@@ -72,11 +73,18 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
                 self.save()
             }
             controller.dismissViewControllerAnimated(true, completion: nil)
+            let rootController = SentMemesTableViewController()
+            self.presentViewController(rootController, animated: true, completion: nil)
         }
         presentViewController(controller, animated: true, completion: nil)
+        
     }
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     
+    @IBAction func goToSentMemes(sender: AnyObject) {
+        let controller = storyboard?.instantiateViewControllerWithIdentifier("rootView")
+        presentViewController(controller!, animated: true, completion: nil)
+    }
     
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -118,7 +126,13 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     }
     
     func save(){
-        _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, image: imageView.image!, memedImage: memedImage)
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, image: imageView.image!, memedImage: memedImage)
+        
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
+        
+        
     }
     
     func generateMemedImage() -> UIImage
