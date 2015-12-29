@@ -18,6 +18,8 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     
     @IBOutlet weak var toolBar: UIToolbar!
     
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    
     var textFieldDelegate = TextFieldDelegate()
     
     var memedImage:UIImage!
@@ -73,8 +75,9 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
                 self.save()
             }
             controller.dismissViewControllerAnimated(true, completion: nil)
-            let rootController = SentMemesTableViewController()
-            self.presentViewController(rootController, animated: true, completion: nil)
+            //let rootController = self.storyboard?.instantiateViewControllerWithIdentifier("rootView")
+            //self.presentViewController(rootController!, animated: true, completion: nil)
+            self.goToSentMemes(sender)
         }
         presentViewController(controller, animated: true, completion: nil)
         
@@ -139,7 +142,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     {
         //self.navigationController?.setToolbarHidden(true, animated: true)
         toolBar.hidden = true
-
+        navigationBar.hidden = true
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawViewHierarchyInRect(self.view.frame,
@@ -148,6 +151,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
         UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         toolBar.hidden = false
+        navigationBar.hidden = false
         return memedImage
     }
 }

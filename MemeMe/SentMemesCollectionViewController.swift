@@ -13,7 +13,13 @@ class SentMemesCollectionViewController:UICollectionViewController {
         return (UIApplication.sharedApplication().delegate as! AppDelegate).memes
     }
     
+    @IBOutlet weak var flowLayout:UICollectionViewFlowLayout!
+    
     override func viewDidLoad() {
+        let space: CGFloat = 3.0
+        let dimenstion = (view.frame.size.width - (2 * space))/3.0
+        flowLayout.minimumInteritemSpacing = space
+        flowLayout.itemSize = CGSizeMake(dimenstion,dimenstion)
         
     }
     
@@ -22,9 +28,18 @@ class SentMemesCollectionViewController:UICollectionViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let memeCell = collectionView.dequeueReusableCellWithReuseIdentifier("memeCollectionViewCell",forIndexPath: indexPath)
+        let memeCell = collectionView.dequeueReusableCellWithReuseIdentifier("memeCollectionViewCell",forIndexPath: indexPath) as! MemeCollectionViewCell
         let meme = memes[indexPath.row]
-        memeCell.backgroundView = UIImageView(image: meme.memedImage)
+        memeCell.updateContent(meme)
+        
         return memeCell
     }
+    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let meme = memes[indexPath.row]
+        let controller = storyboard?.instantiateViewControllerWithIdentifier("MemeDetailsView") as! MemeDetailsViewController
+        controller.meme = meme
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+
 }
