@@ -15,11 +15,13 @@ class SentMemesCollectionViewController:UICollectionViewController {
     
     @IBOutlet weak var flowLayout:UICollectionViewFlowLayout!
     
-    override func viewDidLoad() {
+    override func viewWillAppear(animated: Bool)  {
         let space: CGFloat = 3.0
-        let dimenstion = (view.frame.size.width - (2 * space))/3.0
+        let size = view.frame.size
+        let dimension:CGFloat = size.width >= size.height ? (size.width - (5 * space)) / 6.0 :  (size.width - (2 * space)) / 3.0
         flowLayout.minimumInteritemSpacing = space
-        flowLayout.itemSize = CGSizeMake(dimenstion,dimenstion)
+        flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize = CGSizeMake(dimension,dimension)
         
     }
     
@@ -30,6 +32,7 @@ class SentMemesCollectionViewController:UICollectionViewController {
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let memeCell = collectionView.dequeueReusableCellWithReuseIdentifier("memeCollectionViewCell",forIndexPath: indexPath) as! MemeCollectionViewCell
         let meme = memes[indexPath.row]
+        
         memeCell.updateContent(meme)
         
         return memeCell
@@ -40,6 +43,5 @@ class SentMemesCollectionViewController:UICollectionViewController {
         controller.meme = meme
         navigationController?.pushViewController(controller, animated: true)
     }
-    
 
 }

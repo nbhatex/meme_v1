@@ -24,6 +24,8 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     
     var memedImage:UIImage!
     
+    var origImgSize:CGSize!
+    
     let memeTextAttributes:[String:AnyObject] = [
         NSStrokeColorAttributeName: UIColor.blackColor(),
         NSForegroundColorAttributeName: UIColor.whiteColor(),
@@ -75,8 +77,6 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
                 self.save()
             }
             controller.dismissViewControllerAnimated(true, completion: nil)
-            //let rootController = self.storyboard?.instantiateViewControllerWithIdentifier("rootView")
-            //self.presentViewController(rootController!, animated: true, completion: nil)
             self.goToSentMemes(sender)
         }
         presentViewController(controller, animated: true, completion: nil)
@@ -92,6 +92,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            origImgSize = image.size
             imageView.image = image
             imageView.contentMode = .ScaleAspectFit
             shareButton.enabled = true
@@ -140,12 +141,16 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate , UINavi
     
     func generateMemedImage() -> UIImage
     {
-        //self.navigationController?.setToolbarHidden(true, animated: true)
         toolBar.hidden = true
         navigationBar.hidden = true
+        //Calculate height
+        let height = imageView.frame.height
+        let width = origImgSize.width * (imageView.frame.height/origImgSize.height)
+        let y = -(navigationBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height)
+        let x = (origImgSize.width * (imageView.frame.height/origImgSize.height) - imageView.frame.width)/2
         // Render view to an image
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawViewHierarchyInRect(self.view.frame,
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(width,height), false, 0);
+        view.drawViewHierarchyInRect(CGRectMake(x,y,view.bounds.size.width,view.bounds.size.height),
             afterScreenUpdates: true)
         let memedImage : UIImage =
         UIGraphicsGetImageFromCurrentImageContext()
